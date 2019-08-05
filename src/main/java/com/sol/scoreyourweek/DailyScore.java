@@ -5,11 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -26,5 +25,17 @@ public class DailyScore {
     private Integer healthyFoodScore;
     private Integer noSugarScore;
     private Integer selfTimeScore;
-    private LocalDate date;
+    private Date date;
+    private Integer weekNumber;
+
+//    @ManyToOne
+//    private WeeklyScore weeklyScore;
+
+
+
+    public void setWeekNumber(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        this.weekNumber = calendar.get(Calendar.WEEK_OF_YEAR);
+    }
 }

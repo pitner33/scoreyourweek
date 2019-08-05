@@ -28,6 +28,7 @@ public class DailyScoreServiceImpl implements DailyScoreService {
         DailyScore dailyScore = new DailyScore();
         setScores(dailyScore, dailyScoreDTO);
         setDate(dailyScore,dailyScoreDTO);
+        dailyScore.setWeekNumber(dailyScore.getDate());
         dailyScoreRepository.save(dailyScore);
         return dailyScore;
     }

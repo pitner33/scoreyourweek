@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Component
 @Getter
@@ -18,5 +19,5 @@ public class DailyScoreDTO {
     private Boolean healthyFoodScore;
     private Boolean noSugarScore;
     private Boolean selfTimeScore;
-    private LocalDate date;
+    private Date date;
 }
