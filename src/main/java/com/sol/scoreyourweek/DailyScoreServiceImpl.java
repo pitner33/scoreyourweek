@@ -30,16 +30,14 @@ public class DailyScoreServiceImpl implements DailyScoreService {
             DailyScore dailyScore = dailyScoreToWorkWith.get();
             Optional<WeeklyScore> weeklyScoreToWorkWith = weeklyScoreRepository.findByWeekNumber(dailyScore.getWeekNumber());
 
-
             if (!weeklyScoreToWorkWith.isPresent()) {
                 logger.error("DailyScore is present without WeeklyScore - I thought it is impossible!");
             } else {
                 WeeklyScore weeklyScore = weeklyScoreToWorkWith.get();
                 List<DailyScore> dailyScoreList = weeklyScore.getListOfDailyScores();
+                setAndUpdateDailyAndWeeklyScore(dailyScoreDTO, dailyScore, weeklyScore, dailyScoreList);
                 //TODO refresh the list with this particular DailyScore (fint it in the list and refresh its values)
             }
-
-//            dailyScoreRepository.save(dailyScore);
             return dailyScore;
         } else {
             DailyScore dailyScore = new DailyScore();
@@ -56,9 +54,28 @@ public class DailyScoreServiceImpl implements DailyScoreService {
                 WeeklyScore weeklyScore = new WeeklyScore();
                 List<DailyScore> dailyScoreList = new ArrayList<>();
                 setAndSaveDailyAndWeeklyScore(dailyScoreDTO, dailyScore, weeklyScore, dailyScoreList);
-                return dailyScore;
             }
+            return dailyScore;
         }
+    }
+
+    private void setAndUpdateDailyAndWeeklyScore(DailyScoreDTO dailyScoreDTO, DailyScore dailyScore, WeeklyScore weeklyScore, List<DailyScore> dailyScoreList) {
+        setScores(dailyScore, dailyScoreDTO);
+
+        dailyScoreList.forEach(listelement -> {
+            if (listelement.getId().equals(dailyScore.getId())) {
+                dailyScoreList.remove(listelement);
+                dailyScoreList.add(dailyScore);
+            }
+        });
+
+        weeklyScore.setListOfDailyScores(dailyScoreList);
+        weeklyScore.setWeekNumber(dailyScore.getWeekNumber());
+        weeklyScore.setWeeklyScore(weeklyScoreSum(weeklyScore));
+        weeklyScore.setNumberOfScoredDays();
+
+        dailyScore.setWeeklyScore(weeklyScore);
+        weeklyScoreRepository.save(weeklyScore);
     }
 
     private void setAndSaveDailyAndWeeklyScore(DailyScoreDTO dailyScoreDTO, DailyScore dailyScore, WeeklyScore weeklyScore, List<DailyScore> dailyScoreList) {
