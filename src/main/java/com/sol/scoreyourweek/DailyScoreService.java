@@ -8,4 +8,6 @@ public interface DailyScoreService {
     Integer setScoreByBoolean(Boolean scoreBoolean);
     void setScores(DailyScore dailyScore, DailyScoreDTO dailyScoreDTO);
     void setDate(DailyScore dailyScore, DailyScoreDTO dailyScoreDTO);
+    Integer dailyScoreSum(DailyScore dailyScore);
+    Integer weeklyScoreSum(WeeklyScore weeklyScore);
 }

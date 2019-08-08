@@ -1,17 +1,11 @@
 package com.sol.scoreyourweek.controller;
 
-import com.sol.scoreyourweek.DailyScore;
-import com.sol.scoreyourweek.DailyScoreDTO;
-import com.sol.scoreyourweek.DailyScoreRepository;
-import com.sol.scoreyourweek.DailyScoreService;
+import com.sol.scoreyourweek.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,6 +21,9 @@ public class sywController {
     @Autowired
     DailyScoreRepository dailyScoreRepository;
 
+    @Autowired
+    WeeklyScoreRepository weeklyScoreRepository;
+
     @PostMapping("/dailyscores")
     public ResponseEntity dailyScores(@RequestBody DailyScoreDTO dailyScoreDTO) {
         DailyScore dailyScore = dailyScoreService.dailyScoreElementFromDTO(dailyScoreDTO);
@@ -40,6 +37,13 @@ public class sywController {
     public ResponseEntity allDailyScores() {
         Optional<List<DailyScore>> dailyScoreList = Optional.ofNullable(dailyScoreRepository.findAll());
         return ResponseEntity.of(dailyScoreList);
+    }
+
+    @GetMapping("/dailyscores/{weekNumber}")
+    public ResponseEntity dailyScoresByWeekNumber(@PathVariable Integer weekNumber){
+        WeeklyScore weeklyScore = weeklyScoreRepository.findByWeekNumber(weekNumber).get();
+        return ResponseEntity.ok(weeklyScore.getListOfDailyScores());
+
     }
 
 }

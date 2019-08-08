@@ -1,5 +1,6 @@
 package com.sol.scoreyourweek;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sol.scoreyourweek.DailyScoreRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,15 +21,20 @@ public class WeeklyScore {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long weekId;
 
-    private Integer weekNumber;
+    private Integer weekNumber; //TODO connection to dailyscore and onetomany-manytoone
     private Integer weeklyScore;
     private Integer numberOfScoredDays;
 
-//    @OneToMany
-//    private List<DailyScore> ListOfDailyScores;
+    @OneToMany(mappedBy = "weeklyScore", cascade = CascadeType.PERSIST)
+    @JsonIgnore
+    private List<DailyScore> listOfDailyScores;
 //
 //    @Autowired
 //    private DailyScoreRepository dailyScoreRepository;
 
 
+
+    public void setNumberOfScoredDays() {
+        this.numberOfScoredDays = listOfDailyScores.size();
+    }
 }

@@ -28,8 +28,9 @@ public class DailyScore {
     private Date date;
     private Integer weekNumber;
 
-//    @ManyToOne
-//    private WeeklyScore weeklyScore;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn
+    private WeeklyScore weeklyScore;
 
 
 
