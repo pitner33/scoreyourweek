@@ -43,7 +43,11 @@ public class sywController {
     public ResponseEntity dailyScoresByWeekNumber(@PathVariable Integer weekNumber){
         WeeklyScore weeklyScore = weeklyScoreRepository.findByWeekNumber(weekNumber).get();
         return ResponseEntity.ok(weeklyScore.getListOfDailyScores());
+    }
 
+    @GetMapping("/weeklyscores")
+    public ResponseEntity weeklyScoresList() {
+        return ResponseEntity.ok(weeklyScoreRepository.findAll());
     }
 
 }

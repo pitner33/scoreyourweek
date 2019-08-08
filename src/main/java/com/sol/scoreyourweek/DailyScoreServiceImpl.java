@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -36,7 +35,6 @@ public class DailyScoreServiceImpl implements DailyScoreService {
                 WeeklyScore weeklyScore = weeklyScoreToWorkWith.get();
                 List<DailyScore> dailyScoreList = weeklyScore.getListOfDailyScores();
                 setAndUpdateDailyAndWeeklyScore(dailyScoreDTO, dailyScore, weeklyScore, dailyScoreList);
-                //TODO refresh the list with this particular DailyScore (fint it in the list and refresh its values)
             }
             return dailyScore;
         } else {
@@ -72,6 +70,7 @@ public class DailyScoreServiceImpl implements DailyScoreService {
         weeklyScore.setListOfDailyScores(dailyScoreList);
         weeklyScore.setWeekNumber(dailyScore.getWeekNumber());
         weeklyScore.setWeeklyScore(weeklyScoreSum(weeklyScore));
+        weeklyScore.setWeeklyScorePercent();
         weeklyScore.setNumberOfScoredDays();
 
         dailyScore.setWeeklyScore(weeklyScore);
@@ -87,6 +86,7 @@ public class DailyScoreServiceImpl implements DailyScoreService {
         weeklyScore.setListOfDailyScores(dailyScoreList);
         weeklyScore.setWeekNumber(dailyScore.getWeekNumber());
         weeklyScore.setWeeklyScore(weeklyScoreSum(weeklyScore));
+        weeklyScore.setWeeklyScorePercent();
         weeklyScore.setNumberOfScoredDays();
 
         dailyScore.setWeeklyScore(weeklyScore);
