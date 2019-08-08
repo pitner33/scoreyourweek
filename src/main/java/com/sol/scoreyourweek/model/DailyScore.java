@@ -1,4 +1,4 @@
-package com.sol.scoreyourweek;
+package com.sol.scoreyourweek.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

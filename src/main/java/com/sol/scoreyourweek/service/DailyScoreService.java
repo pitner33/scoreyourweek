@@ -1,5 +1,8 @@
-package com.sol.scoreyourweek;
+package com.sol.scoreyourweek.service;
 
+import com.sol.scoreyourweek.model.WeeklyScore;
+import com.sol.scoreyourweek.model.DailyScore;
+import com.sol.scoreyourweek.model.dto.DailyScoreDTO;
 import org.springframework.stereotype.Service;
 
 @Service

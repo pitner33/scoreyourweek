@@ -1,6 +1,7 @@
-package com.sol.scoreyourweek;
+package com.sol.scoreyourweek.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sol.scoreyourweek.model.DailyScore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

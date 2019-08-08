@@ -1,6 +1,11 @@
 package com.sol.scoreyourweek.controller;
 
-import com.sol.scoreyourweek.*;
+import com.sol.scoreyourweek.model.DailyScore;
+import com.sol.scoreyourweek.model.WeeklyScore;
+import com.sol.scoreyourweek.model.dto.DailyScoreDTO;
+import com.sol.scoreyourweek.repository.DailyScoreRepository;
+import com.sol.scoreyourweek.repository.WeeklyScoreRepository;
+import com.sol.scoreyourweek.service.DailyScoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
