@@ -32,11 +32,4 @@ public class DailyScore {
     @JoinColumn
     private WeeklyScore weeklyScore;
 
-
-
-    public void setWeekNumber(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        this.weekNumber = calendar.get(Calendar.WEEK_OF_YEAR);
-    }
 }

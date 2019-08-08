@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,9 +28,9 @@ public class DailyScoreServiceImpl implements DailyScoreService {
 
         if (dailyScoreToWorkWith.isPresent()) {
             DailyScore dailyScore = dailyScoreToWorkWith.get();
-            setScores(dailyScore, dailyScoreDTO);
-
             Optional<WeeklyScore> weeklyScoreToWorkWith = weeklyScoreRepository.findByWeekNumber(dailyScore.getWeekNumber());
+
+
             if (!weeklyScoreToWorkWith.isPresent()) {
                 logger.error("DailyScore is present without WeeklyScore - I thought it is impossible!");
             } else {
@@ -38,38 +39,40 @@ public class DailyScoreServiceImpl implements DailyScoreService {
                 //TODO refresh the list with this particular DailyScore (fint it in the list and refresh its values)
             }
 
-
-            dailyScoreRepository.save(dailyScore);
+//            dailyScoreRepository.save(dailyScore);
             return dailyScore;
         } else {
             DailyScore dailyScore = new DailyScore();
-            setScores(dailyScore, dailyScoreDTO);
-            setDate(dailyScore, dailyScoreDTO);
-            dailyScore.setWeekNumber(dailyScore.getDate());
+            dailyScoreRepository.save(dailyScore);
+            Optional<WeeklyScore> weeklyScoreToWorkWith = weeklyScoreRepository.findByWeekNumber(weekNumberFromDailyScoreDTO(dailyScoreDTO));
 
-            Optional<WeeklyScore> weeklyScoreToWorkWith = weeklyScoreRepository.findByWeekNumber(dailyScore.getWeekNumber());
             if (weeklyScoreToWorkWith.isPresent()) {
                 WeeklyScore weeklyScore = weeklyScoreToWorkWith.get();
-                setAndSaveWeeklyScore(dailyScore, weeklyScore);
+                List<DailyScore> dailyScoreList = weeklyScore.getListOfDailyScores();
+
+                setAndSaveDailyAndWeeklyScore(dailyScoreDTO, dailyScore, weeklyScore, dailyScoreList);
+                return dailyScore;
             } else {
                 WeeklyScore weeklyScore = new WeeklyScore();
-                setAndSaveWeeklyScore(dailyScore, weeklyScore);
+                List<DailyScore> dailyScoreList = new ArrayList<>();
+                setAndSaveDailyAndWeeklyScore(dailyScoreDTO, dailyScore, weeklyScore, dailyScoreList);
+                return dailyScore;
             }
-
-            dailyScoreRepository.save(dailyScore);
-            return dailyScore;
         }
     }
 
-    private void setAndSaveWeeklyScore(DailyScore dailyScore, WeeklyScore weeklyScore) {
-        dailyScore.setWeeklyScore(weeklyScore);
-        List<DailyScore> dailyScoreList = new ArrayList<>();
-        dailyScoreList.add(dailyScore);
+    private void setAndSaveDailyAndWeeklyScore(DailyScoreDTO dailyScoreDTO, DailyScore dailyScore, WeeklyScore weeklyScore, List<DailyScore> dailyScoreList) {
+        setScores(dailyScore, dailyScoreDTO);
+        setDate(dailyScore, dailyScoreDTO);
+        dailyScore.setWeekNumber(weekNumberFromDailyScoreDTO(dailyScoreDTO));
 
+        dailyScoreList.add(dailyScore);
         weeklyScore.setListOfDailyScores(dailyScoreList);
         weeklyScore.setWeekNumber(dailyScore.getWeekNumber());
         weeklyScore.setWeeklyScore(weeklyScoreSum(weeklyScore));
         weeklyScore.setNumberOfScoredDays();
+
+        dailyScore.setWeeklyScore(weeklyScore);
         weeklyScoreRepository.save(weeklyScore);
     }
 
@@ -111,6 +114,13 @@ public class DailyScoreServiceImpl implements DailyScoreService {
         }
 
         return weeklyScoreSum;
+    }
+
+    @Override
+    public Integer weekNumberFromDailyScoreDTO(DailyScoreDTO dailyScoreDTO) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dailyScoreDTO.getDate());
+        return calendar.get(Calendar.WEEK_OF_YEAR);
     }
 
 
