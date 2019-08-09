@@ -1,6 +1,11 @@
 package com.sol.scoreyourweek.service;
 
 import com.sol.scoreyourweek.model.WeeklyScore;
+import com.sol.scoreyourweek.model.scores.HealthyFoodScore;
+import com.sol.scoreyourweek.model.scores.NoSugarScore;
+import com.sol.scoreyourweek.model.scores.SelfTimeScore;
+import com.sol.scoreyourweek.model.scores.TrainingScore;
+import com.sol.scoreyourweek.repository.ScoreRepository;
 import com.sol.scoreyourweek.repository.WeeklyScoreRepository;
 import com.sol.scoreyourweek.model.DailyScore;
 import com.sol.scoreyourweek.model.dto.DailyScoreDTO;
@@ -16,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class DailyScoreServiceImpl implements DailyScoreService {
+public class ScoreServiceImpl implements ScoreService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -24,6 +29,9 @@ public class DailyScoreServiceImpl implements DailyScoreService {
 
     @Autowired
     WeeklyScoreRepository weeklyScoreRepository;
+
+    @Autowired
+    ScoreRepository scoreRepository;
 
     @Override
     public DailyScore dailyScoreElementFromDTO(DailyScoreDTO dailyScoreDTO) {
@@ -108,10 +116,29 @@ public class DailyScoreServiceImpl implements DailyScoreService {
 
     @Override
     public void setScores(DailyScore dailyScore, DailyScoreDTO dailyScoreDTO) {
-        dailyScore.setHealthyFoodScore(setScoreByBoolean(dailyScoreDTO.getHealthyFoodScore()));
-        dailyScore.setNoSugarScore(setScoreByBoolean(dailyScoreDTO.getNoSugarScore()));
-        dailyScore.setTrainingScore(setScoreByBoolean(dailyScoreDTO.getTrainingScore()));
-        dailyScore.setSelfTimeScore(setScoreByBoolean(dailyScoreDTO.getSelfTimeScore()));
+        TrainingScore trainingScore = new TrainingScore();
+        trainingScore.setScore(setScoreByBoolean(dailyScoreDTO.getTrainingScore()));
+        trainingScore.setDailyScore(dailyScore);
+        dailyScore.setTrainingScore(trainingScore);
+        scoreRepository.save(trainingScore);
+
+        HealthyFoodScore healthyFoodScore = new HealthyFoodScore();
+        healthyFoodScore.setScore(setScoreByBoolean(dailyScoreDTO.getHealthyFoodScore()));
+        healthyFoodScore.setDailyScore(dailyScore);
+        dailyScore.setHealthyFoodScore(healthyFoodScore);
+        scoreRepository.save(healthyFoodScore);
+
+        NoSugarScore noSugarScore = new NoSugarScore();
+        noSugarScore.setScore(setScoreByBoolean(dailyScoreDTO.getNoSugarScore()));
+        noSugarScore.setDailyScore(dailyScore);
+        dailyScore.setNoSugarScore(noSugarScore);
+        scoreRepository.save(noSugarScore);
+
+        SelfTimeScore selfTimeScore = new SelfTimeScore();
+        selfTimeScore.setScore(setScoreByBoolean(dailyScoreDTO.getSelfTimeScore()));
+        selfTimeScore.setDailyScore(dailyScore);
+        dailyScore.setSelfTimeScore(selfTimeScore);
+        scoreRepository.save(selfTimeScore);
     }
 
     @Override
@@ -121,10 +148,10 @@ public class DailyScoreServiceImpl implements DailyScoreService {
 
     @Override
     public Integer dailyScoreSum(DailyScore dailyScore) {
-        return dailyScore.getHealthyFoodScore()
-                + dailyScore.getNoSugarScore()
-                + dailyScore.getTrainingScore()
-                + dailyScore.getSelfTimeScore();
+        return dailyScore.getHealthyFoodScore().getScore()
+                + dailyScore.getNoSugarScore().getScore()
+                + dailyScore.getTrainingScore().getScore()
+                + dailyScore.getSelfTimeScore().getScore();
     }
 
     @Override

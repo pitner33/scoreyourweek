@@ -6,7 +6,8 @@ import com.sol.scoreyourweek.model.dto.DailyScoreDTO;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface DailyScoreService {
+public interface ScoreService {
+
     DailyScore dailyScoreElementFromDTO(DailyScoreDTO dailyScoreDTO);
 
     Integer setScoreByBoolean(Boolean scoreBoolean);

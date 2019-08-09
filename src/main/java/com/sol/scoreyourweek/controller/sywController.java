@@ -5,7 +5,7 @@ import com.sol.scoreyourweek.model.WeeklyScore;
 import com.sol.scoreyourweek.model.dto.DailyScoreDTO;
 import com.sol.scoreyourweek.repository.DailyScoreRepository;
 import com.sol.scoreyourweek.repository.WeeklyScoreRepository;
-import com.sol.scoreyourweek.service.DailyScoreService;
+import com.sol.scoreyourweek.service.ScoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class sywController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    DailyScoreService dailyScoreService;
+    ScoreService scoreService;
 
     @Autowired
     DailyScoreRepository dailyScoreRepository;
@@ -31,7 +31,7 @@ public class sywController {
 
     @PostMapping("/dailyscores")
     public ResponseEntity dailyScores(@RequestBody DailyScoreDTO dailyScoreDTO) {
-        DailyScore dailyScore = dailyScoreService.dailyScoreElementFromDTO(dailyScoreDTO);
+        DailyScore dailyScore = scoreService.dailyScoreElementFromDTO(dailyScoreDTO);
         logger.info(dailyScore.toString());
         logger.info(LocalDate.now().toString());
         logger.info(new DailyScoreDTO().toString());
